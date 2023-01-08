@@ -16,9 +16,10 @@
 // 4 - 1 - Response can be in any formate type (XML, Json)
 // 4 - 2 - Nest will wrap the response value as an HTTP response
 //         and return it to the client
-import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { Task } from './task.model';
 import { TasksService } from './tasks.service';
-
 // Controllers are defined by decorating a class with @Controller decorator
 // The decorator accepts a string, which is the path to be handled by the controllers
 @Controller('tasks')
@@ -28,14 +29,13 @@ export class TasksController {
   // Handlers are methods within the decorated class
   // Handlers method decorated with decorators such as @GET, @POST, @Delete ...etc
   @Get()
-  getAllTasks() {
+  getAllTasks(): Task[] {
     // do stuff
     return this.tasksService.tasks;
   }
 
   @Post()
-  createTask() {
-    // do stuff
-    return;
+  createTask(@Body() createTaskDto: CreateTaskDto): Task {
+    return this.tasksService.createTask(createTaskDto);
   }
 }

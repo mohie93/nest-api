@@ -4,6 +4,9 @@
 // - Providers mist be provided to a module for them to be usable
 // - Can be exported from a module - and them be available to other modules that import it
 import { Injectable } from '@nestjs/common';
+import { Task, TaskStatus } from './task.model';
+import { v4 as uuidV4 } from 'uuid';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 // Dependency injection in NestJs
 // - Any component within the NestJS ecosystem can inject a provider that is
@@ -23,13 +26,22 @@ import { Injectable } from '@nestjs/common';
 //   a controller to validate data, create an item in the database
 //   and return a response
 export class TasksService {
-  private _tasks = [];
+  private _tasks: Task[] = [];
 
-  public get tasks() {
+  public get tasks(): Task[] {
     return this._tasks;
   }
 
-  doSomething() {
-    return "Yo, I'm doing my work!";
+  createTask(createTaskDto: CreateTaskDto): Task {
+    const { title, description } = createTaskDto;
+    const task: Task = {
+      id: uuidV4(),
+      title: title,
+      description: description,
+      status: TaskStatus.OPEN,
+    };
+
+    this._tasks = [...this._tasks, task];
+    return task;
   }
 }
