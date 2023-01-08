@@ -16,7 +16,15 @@
 // 4 - 1 - Response can be in any formate type (XML, Json)
 // 4 - 2 - Nest will wrap the response value as an HTTP response
 //         and return it to the client
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from './task.model';
 import { TasksService } from './tasks.service';
@@ -37,5 +45,17 @@ export class TasksController {
   @Post()
   createTask(@Body() createTaskDto: CreateTaskDto): Task {
     return this.tasksService.createTask(createTaskDto);
+  }
+
+  @Get('/:id')
+  getTaskById(@Param() params): Task {
+    const { id } = params;
+    return this.tasksService.getTaskById(id);
+  }
+
+  @Delete('/:id')
+  deleteTaskById(@Param() params) {
+    const { id } = params;
+    return this.tasksService.deleteTaskById(id);
   }
 }
