@@ -3,7 +3,7 @@
 // - Can be a plain value, a class, sync/async function factory, ...etc
 // - Providers mist be provided to a module for them to be usable
 // - Can be exported from a module - and them be available to other modules that import it
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus, TaskEditableAttributes } from './task.model';
 import { v4 as uuidV4 } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -34,6 +34,9 @@ export class TasksService {
 
   getTaskById(taskId: string): Task {
     const task: Task = this._tasks.find((t) => t.id === taskId);
+
+    if (!task) throw new NotFoundException(`Task with ID ${taskId} not found!`);
+
     return task;
   }
 
