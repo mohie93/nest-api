@@ -4,7 +4,7 @@
 // - Providers mist be provided to a module for them to be usable
 // - Can be exported from a module - and them be available to other modules that import it
 import { Injectable } from '@nestjs/common';
-import { Task, TaskStatus } from './task.model';
+import { Task, TaskStatus, TaskEditableAttributes } from './task.model';
 import { v4 as uuidV4 } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
 
@@ -39,6 +39,17 @@ export class TasksService {
 
   deleteTaskById(taskId: string) {
     this._tasks = this._tasks.filter((t) => t.id !== taskId);
+  }
+
+  updateTaskById(taskId: string, attributes: TaskEditableAttributes): Task {
+    const task: Task = this.getTaskById(taskId);
+    if (task) {
+      for (const attribute in attributes) {
+        if (Object.keys(task).includes(attribute))
+          task[attribute] = attributes[attribute];
+      }
+    }
+    return task;
   }
 
   createTask(createTaskDto: CreateTaskDto): Task {

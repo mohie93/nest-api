@@ -4,6 +4,12 @@ export enum TaskStatus {
   DONE = 'done',
 }
 
+export interface TaskEditableAttributes {
+  title: string;
+  description: string;
+  status: TaskStatus;
+}
+
 export interface Task {
   id: string;
   title: string;

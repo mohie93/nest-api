@@ -26,6 +26,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './task.model';
 import { TasksService } from './tasks.service';
 // Controllers are defined by decorating a class with @Controller decorator
@@ -57,5 +58,11 @@ export class TasksController {
   deleteTaskById(@Param() params) {
     const { id } = params;
     return this.tasksService.deleteTaskById(id);
+  }
+
+  @Patch('/:id')
+  updateTaskById(@Param() params, @Body() updateTaskDto: UpdateTaskDto): Task {
+    const { id } = params;
+    return this.tasksService.updateTaskById(id, updateTaskDto);
   }
 }
