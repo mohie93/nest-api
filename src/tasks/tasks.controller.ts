@@ -37,32 +37,32 @@ export class TasksController {
   // defining a handler
   // Handlers are methods within the decorated class
   // Handlers method decorated with decorators such as @GET, @POST, @Delete ...etc
-  @Get()
-  getAllTasks(): Task[] {
-    // do stuff
-    return this.tasksService.tasks;
-  }
+  // @Get()
+  // getAllTasks(): Task[] {
+  //   // do stuff
+  //   return this.tasksService.tasks;
+  // }
 
-  @Post()
-  createTask(@Body() createTaskDto: CreateTaskDto): Task {
-    return this.tasksService.createTask(createTaskDto);
-  }
+  // @Post()
+  // createTask(@Body() createTaskDto: CreateTaskDto): Task {
+  //   return this.tasksService.createTask(createTaskDto);
+  // }
 
   @Get('/:id')
-  getTaskById(@Param() params): Task {
+  async getTaskById(@Param() params): Promise<Task> {
     const { id } = params;
-    return this.tasksService.getTaskById(id);
+    return await this.tasksService.getTaskById(id);
   }
 
-  @Delete('/:id')
-  deleteTaskById(@Param() params) {
-    const { id } = params;
-    return this.tasksService.deleteTaskById(id);
-  }
+  // @Delete('/:id')
+  // deleteTaskById(@Param() params) {
+  //   const { id } = params;
+  //   return this.tasksService.deleteTaskById(id);
+  // }
 
-  @Patch('/:id')
-  updateTaskById(@Param() params, @Body() updateTaskDto: UpdateTaskDto): Task {
-    const { id } = params;
-    return this.tasksService.updateTaskById(id, updateTaskDto);
-  }
+  // @Patch('/:id')
+  // updateTaskById(@Param() params, @Body() updateTaskDto: UpdateTaskDto): Task {
+  //   const { id } = params;
+  //   return this.tasksService.updateTaskById(id, updateTaskDto);
+  // }
 }

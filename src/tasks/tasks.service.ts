@@ -7,6 +7,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus, TaskEditableAttributes } from './task.model';
 import { v4 as uuidV4 } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { TaskRepository } from './task.repository';
+import { InjectRepository } from '@nestjs/typeorm';
 
 // Dependency injection in NestJs
 // - Any component within the NestJS ecosystem can inject a provider that is
@@ -26,45 +28,48 @@ import { CreateTaskDto } from './dto/create-task.dto';
 //   a controller to validate data, create an item in the database
 //   and return a response
 export class TasksService {
+  constructor(
+    @InjectRepository(TaskRepository) private taskRepository: TaskRepository,
+  ) {}
+
   private _tasks: Task[] = [];
 
   public get tasks(): Task[] {
     return this._tasks;
   }
 
-  getTaskById(taskId: string): Task {
-    const task: Task = this._tasks.find((t) => t.id === taskId);
+  async getTaskById(id: string): Promise<Task> {
+    const found = await this.taskRepository.findOneBy({ id: id });
+    if (!found) throw new NotFoundException();
 
-    if (!task) throw new NotFoundException(`Task with ID ${taskId} not found!`);
-
-    return task;
+    return found;
   }
 
-  deleteTaskById(taskId: string) {
-    this._tasks = this._tasks.filter((t) => t.id !== taskId);
-  }
+  // deleteTaskById(taskId: string) {
+  //   this._tasks = this._tasks.filter((t) => t.id !== taskId);
+  // }
 
-  updateTaskById(taskId: string, attributes: TaskEditableAttributes): Task {
-    const task: Task = this.getTaskById(taskId);
-    if (task) {
-      for (const attribute in attributes) {
-        if (Object.keys(task).includes(attribute))
-          task[attribute] = attributes[attribute];
-      }
-    }
-    return task;
-  }
+  // updateTaskById(taskId: string, attributes: TaskEditableAttributes): Task {
+  //   const task: Task = this.getTaskById(taskId);
+  //   if (task) {
+  //     for (const attribute in attributes) {
+  //       if (Object.keys(task).includes(attribute))
+  //         task[attribute] = attributes[attribute];
+  //     }
+  //   }
+  //   return task;
+  // }
 
-  createTask(createTaskDto: CreateTaskDto): Task {
-    const { title, description } = createTaskDto;
-    const task: Task = {
-      id: uuidV4(),
-      title: title,
-      description: description,
-      status: TaskStatus.OPEN,
-    };
+  // createTask(createTaskDto: CreateTaskDto): Task {
+  //   const { title, description } = createTaskDto;
+  //   const task: Task = {
+  //     id: uuidV4(),
+  //     title: title,
+  //     description: description,
+  //     status: TaskStatus.OPEN,
+  //   };
 
-    this._tasks = [...this._tasks, task];
-    return task;
-  }
+  //   this._tasks = [...this._tasks, task];
+  //   return task;
+  // }
 }
